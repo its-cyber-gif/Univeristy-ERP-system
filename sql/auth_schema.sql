@@ -1,0 +1,19 @@
+CREATE DATABASE IF NOT EXISTS authdb;
+USE authdb;
+
+CREATE TABLE users_auth (
+  user_id INT AUTO_INCREMENT PRIMARY KEY,
+  username VARCHAR(100) NOT NULL UNIQUE,
+  role ENUM('ADMIN','INSTRUCTOR','STUDENT') NOT NULL,
+  password_hash VARCHAR(255) NOT NULL,
+  status ENUM('ACTIVE','BLOCKED') DEFAULT 'ACTIVE',
+  last_login TIMESTAMP NULL
+);
+
+CREATE TABLE login_attempts (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  user_id INT,
+  attempt_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  successful BOOLEAN,
+  FOREIGN KEY (user_id) REFERENCES users_auth(user_id) ON DELETE SET NULL
+);
